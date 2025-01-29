@@ -26,6 +26,10 @@ COPY . .
 RUN flutter pub get
 RUN flutter build web --no-tree-shake-icons
 
+RUN ls -l build/web/assets/ || mkdir -p build/web/assets/
+
+COPY assets/ build/web/assets/
+
 # Stage 2: Create nginx server to serve the app
 FROM nginx:1.21-alpine
 
