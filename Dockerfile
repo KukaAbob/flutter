@@ -29,16 +29,14 @@ RUN flutter build web --no-tree-shake-icons
 # Stage 2: Create nginx server to serve the app
 FROM nginx:1.21-alpine
 
-# Copy built files to nginx
+# Убираем worker_processes из default.conf (этот параметр разрешён только в nginx.conf)
 COPY --from=build-env /app/build/web /usr/share/nginx/html
 
-# Configure main nginx.conf
-RUN echo 'worker_processes auto;' > /etc/nginx/nginx.conf && \
-    echo 'events { worker_connections 1024; }' >> /etc/nginx/nginx.conf && \
-    echo 'http { include /etc/nginx/mime.types; default_type application/octet-stream; include /etc/nginx/conf.d/*.conf; }' >> /etc/nginx/nginx.conf
+# Правильная конфигурация nginx.conf
+COPY nginx.conf /etc/nginx/nginx.conf
 
-# Add server config
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Копируем конфиг сервера
+COPY default.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
 
