@@ -24,15 +24,20 @@ RUN flutter config --enable-web
 WORKDIR /app
 COPY . .
 RUN flutter pub get
-RUN flutter build web
+RUN flutter build web --no-tree-shake-icons
 
 # Stage 2: Create nginx server to serve the app
-FROM nginx:alpine
+FROM nginx:1.21-alpine
 
 # Copy built files to nginx
 COPY --from=build-env /app/build/web /usr/share/nginx/html
 
-# Custom nginx config
+# Optimize nginx configuration
+RUN echo 'worker_processes 1;' > /etc/nginx/nginx.conf && \
+    echo 'events { worker_connections 1024; use epoll; multi_accept on; }' >> /etc/nginx/nginx.conf && \
+    echo 'http { include /etc/nginx/conf.d/*.conf; }' >> /etc/nginx/nginx.conf
+
+# Add custom nginx config
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
