@@ -24,7 +24,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final List<Map<String, String>> products = [
     {
-      "image": "assets/2.png", // Add preview image
+      "image": "assets/2.png", // Добавлено изображение для предпросмотра
       "name": "Original",
       "color": "The one and only CactUs!",
       "price": "\◊ 0.02",
@@ -104,10 +104,10 @@ class _HomePageState extends State<HomePage> {
     return double.tryParse(price.replaceAll(RegExp(r"[^\d.]"), ""));
   }
 
-  // Update the display image method with better debug info
+  // Обновление метода отображения изображения с улучшенной отладочной информацией
   String _getDisplayImage(Map<String, String> product, double screenWidth) {
     try {
-      print('Screen size check: $screenWidth <= 800 = ${screenWidth <= 800}');
+      print('Проверка размера экрана: $screenWidth <= 800 = ${screenWidth <= 800}');
       // Всегда используем стандартное изображение для маленьких экранов
       if (screenWidth <= 800 || !product.containsKey('preview_image')) {
         return product['image']!;
@@ -116,7 +116,7 @@ class _HomePageState extends State<HomePage> {
       // Для больших экранов всегда используем preview
       return 'assets/${product['preview_image']}';
     } catch (e) {
-      print('Error in _getDisplayImage: $e');
+      print('Ошибка в _getDisplayImage: $e');
       return product['image']!;
     }
   }
@@ -155,14 +155,14 @@ class _HomePageState extends State<HomePage> {
           final maxHeight = constraints.maxHeight;
           final screenWidth = MediaQuery.of(context).size.width;
           
-          print('Current screen width: $screenWidth');
-          print('Selected index: $selectedIndex');
+          print('Текущая ширина экрана: $screenWidth');
+          print('Выбранный индекс: $selectedIndex');
           
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(
-                height: maxHeight * 0.4, // 40% of screen height
+                height: maxHeight * 0.4, // 40% от высоты экрана
                 child: Stack(
                   children: [
                     AnimatedSwitcher(
@@ -177,12 +177,12 @@ class _HomePageState extends State<HomePage> {
                         decoration: BoxDecoration(
                           color: Colors.black,
                         ),
-                        child: ClipRect(  // Add ClipRect to ensure image stays within bounds
+                        child: ClipRect(  // Добавляем ClipRect, чтобы изображение оставалось в пределах
                           child: _buildImage(_getDisplayImage(filteredProducts[selectedIndex], screenWidth)),
                         ),
                       ),
                     ),
-                    // Gradient overlay
+                    // Градиентный наложение
                     Container(
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
@@ -195,11 +195,11 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                     ),
-                    // Text and button positioning remains the same
+                    // Позиционирование текста и кнопки остается прежним
                     Positioned(
                       bottom: 20,
                       left: 20,
-                      right: 70, // Add right padding for FAB
+                      right: 70, // Добавляем отступ справа для FAB
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -269,7 +269,7 @@ class _HomePageState extends State<HomePage> {
     if (await canLaunch(selectedUrl)) {
       await launch(selectedUrl);
     } else {
-      throw 'Could not launch $selectedUrl';
+      throw 'Не удалось запустить $selectedUrl';
     }
   }
 
@@ -278,7 +278,7 @@ class _HomePageState extends State<HomePage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Scan to Connect MetaMask'),
+          title: Text('Сканируйте для подключения MetaMask'),
           content: SizedBox(
             width: 200,
             height: 200,
@@ -289,7 +289,7 @@ class _HomePageState extends State<HomePage> {
           ),
           actions: [
             TextButton(
-              child: Text("Close"),
+              child: Text("Закрыть"),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -314,7 +314,7 @@ class _HomePageState extends State<HomePage> {
             alignment: Alignment.center,
             // Убираем errorBuilder с fallback на стандартное изображение
             errorBuilder: (context, error, stackTrace) {
-              print('Error loading image: $error');
+              print('Ошибка загрузки изображения: $error');
               return Container(
                 color: Colors.black,
                 child: Center(
@@ -352,8 +352,8 @@ class ProductCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
-            width: 100, // Restored fixed width
-            height: 100, // Restored fixed height
+            width: 100, // Восстановлена фиксированная ширина
+            height: 100, // Восстановлена фиксированная высота
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),

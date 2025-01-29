@@ -69,7 +69,8 @@ flutter:
     - assets/2.png
     - assets/3.png
     - assets/4.png
-    - assets/1_preview.png  # Make sure this file exists in the assets folder
+    - assets/1_preview.png
+    - assets/main.jpg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
 

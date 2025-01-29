@@ -12,7 +12,7 @@ class SplashScreen extends StatelessWidget {
           final maxWidth = constraints.maxWidth;
           final maxHeight = constraints.maxHeight;
           
-          // Calculate responsive font sizes with constraints
+          // Рассчитываем адаптивные размеры шрифта с учетом ограничений
           final buttonFontSize = (maxWidth * 0.015).clamp(16.0, 24.0);
           
           return Stack(
