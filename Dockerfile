@@ -1,62 +1,40 @@
 # Stage 1: Build the Flutter web app
-FROM ubuntu:20.04 AS builder
+FROM debian:latest AS build-env
 
-# Set environment variables
-ENV DEBIAN_FRONTEND=noninteractive
-ENV FLUTTER_VERSION="3.27.3"
-ENV FLUTTER_HOME=/usr/local/flutter
-
-# Install required dependencies
+# Install dependencies
 RUN apt-get update && \
-    apt-get install -y \
-    curl \
-    git \
-    unzip \
-    xz-utils \
-    zip \
-    libglu1-mesa
+    apt-get install -y curl git wget unzip libgconf-2-4 gdb libstdc++6 libglu1-mesa fonts-droid-fallback lib32stdc++6 python3 && \
+    apt-get clean
 
-# Download and setup Flutter
-RUN git clone https://github.com/flutter/flutter.git $FLUTTER_HOME && \
-    cd $FLUTTER_HOME && \
-    git checkout $FLUTTER_VERSION
+# Clone the flutter repo
+RUN git clone https://github.com/flutter/flutter.git /usr/local/flutter
 
-# Add flutter to PATH
-ENV PATH="$FLUTTER_HOME/bin:$PATH"
+# Set flutter path
+ENV PATH="/usr/local/flutter/bin:/usr/local/flutter/bin/cache/dart-sdk/bin:${PATH}"
+
+# Run flutter doctor
+RUN flutter doctor -v
 
 # Enable flutter web
+RUN flutter channel stable
+RUN flutter upgrade
 RUN flutter config --enable-web
 
-# Copy the app files to the container
+# Copy files to container and build
 WORKDIR /app
 COPY . .
-
-# Get app dependencies
 RUN flutter pub get
-
-# Build Flutter web app
-RUN flutter build web --release
+RUN flutter build web
 
 # Stage 2: Create nginx server to serve the app
 FROM nginx:alpine
 
-# Copy the built app to nginx's serve directory
-COPY --from=builder /app/build/web /usr/share/nginx/html
+# Copy built files to nginx
+COPY --from=build-env /app/build/web /usr/share/nginx/html
 
-# Copy nginx configuration
-RUN echo ' \
-server { \
-    listen 80; \
-    server_name localhost; \
-    location / { \
-        root /usr/share/nginx/html; \
-        index index.html index.htm; \
-        try_files $uri $uri/ /index.html; \
-    } \
-}' > /etc/nginx/conf.d/default.conf
+# Custom nginx config
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Expose port 80
 EXPOSE 80
 
-# Start nginx
 CMD ["nginx", "-g", "daemon off;"]
