@@ -23,11 +23,17 @@ RUN flutter config --enable-web
 # Copy files to container and build
 WORKDIR /app
 COPY . .
+
+# Clean previous builds to ensure a fresh build
+RUN flutter clean
+
+# Get dependencies and build
 RUN flutter pub get
-RUN flutter build web --no-tree-shake-icons
+RUN flutter build web --release --no-tree-shake-icons
 
 RUN ls -l build/web/assets/ || mkdir -p build/web/assets/
 
+# Copy assets
 COPY assets/ build/web/assets/
 
 # Stage 2: Create nginx server to serve the app
