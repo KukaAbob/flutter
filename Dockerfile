@@ -27,8 +27,11 @@ COPY . .
 # Clean previous builds to ensure a fresh build
 RUN flutter clean
 
-# Get dependencies and build
-RUN flutter pub get
+# Get dependencies, check outdated, and upgrade them
+RUN flutter pub outdated
+RUN flutter pub upgrade
+
+# Build the Flutter web app
 RUN flutter build web --release --no-tree-shake-icons
 
 RUN ls -l build/web/assets/ || mkdir -p build/web/assets/
