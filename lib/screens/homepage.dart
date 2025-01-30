@@ -49,7 +49,7 @@ class _HomePageState extends State<HomePage> {
       "name": "Pirate",
       "color": "Yo Ho a pirate's life for me",
       "price": "✎ Make offer",
-      "url": "https://opensea.io/assets/ethereum/0x3dbf429288b5e65fb5bcd8bc35fcfb24e9bba91a/4"
+      "url": "https://opensea.io/assets/ethereum/0x3dbf429288b5e65fb5bcd8bc35fcfb24e9bba91a/16"
     },
   ];
 
